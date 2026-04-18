@@ -2,27 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  box-sizing: border-box;
+/* ── Theme variables ────────────────────────────────────────────── */
+:root {
+  /* Background */
+  --bg-body:  #eef2ff;
+  --bg-image:
+    radial-gradient(ellipse at 10% 10%, rgba(167,139,250,0.28) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 85%, rgba(6,182,212,0.18)   0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(236,72,153,0.10)  0%, transparent 55%);
+  --bg-dots:
+    radial-gradient(4px 4px at  8% 12%, rgba(124,58,237,0.25), transparent),
+    radial-gradient(3px 3px at 22% 45%, rgba(236,72,153,0.20), transparent),
+    radial-gradient(4px 4px at 38% 78%, rgba(6,182,212,0.22),  transparent),
+    radial-gradient(3px 3px at 55% 20%, rgba(16,185,129,0.18), transparent),
+    radial-gradient(4px 4px at 67% 62%, rgba(245,158,11,0.20), transparent),
+    radial-gradient(3px 3px at 80%  8%, rgba(124,58,237,0.18), transparent),
+    radial-gradient(4px 4px at 92% 35%, rgba(236,72,153,0.22), transparent),
+    radial-gradient(3px 3px at 14% 88%, rgba(6,182,212,0.18),  transparent),
+    radial-gradient(3px 3px at 73% 92%, rgba(16,185,129,0.20), transparent);
+
+  /* Card glass */
+  --card-bg:     rgba(255, 255, 255, 0.82);
+  --card-border: rgba(255, 255, 255, 0.95);
+  --card-shadow: 0 8px 32px rgba(99,102,241,0.10), 0 2px 8px rgba(0,0,0,0.06);
+
+  /* Inputs */
+  --input-bg:          #f8fafc;
+  --input-border:      #e2e8f0;
+  --input-text:        #1e293b;
+  --input-placeholder: #94a3b8;
+  --input-focus:       #a78bfa;
+
+  /* Typing chars */
+  --char-pending:      #94a3b8;
+  --char-correct:      #1e293b;
+  --char-cursor-color: #7c3aed;
+
+  /* Race track */
+  --track-bg:     linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  --track-border: #e2e8f0;
+  --track-shadow: inset 0 2px 6px rgba(0,0,0,0.06);
+  --track-line:   rgba(0,0,0,0.10);
+  --track-finish: #374151;
+
+  /* Progress bar */
+  --progress-bg:     #f1f5f9;
+  --progress-border: #e2e8f0;
+
+  /* Scrollbar */
+  --scroll-track:       #f1f5f9;
+  --scroll-thumb:       #cbd5e1;
+  --scroll-thumb-hover: #94a3b8;
+
+  /* Room code banner */
+  --code-bg:     linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(168,85,247,0.06) 100%);
+  --code-border: rgba(99,102,241,0.25);
+  --code-shadow: 0 8px 32px rgba(99,102,241,0.12);
+  --code-text:   #3730a3;
+  --code-label:  #7c3aed;
 }
 
-body {
-  font-family: 'Nunito', sans-serif;
-  background: #0a0618;
-  background-image:
-    radial-gradient(ellipse at 15% 15%, rgba(124, 58, 237, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 80%, rgba(6, 182, 212, 0.12) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 100%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
-  color: #f1f5f9;
-  min-height: 100vh;
-}
-
-/* ── Stars background ───────────────────────────────────────────── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
+.dark {
+  --bg-body: #0a0618;
+  --bg-image:
+    radial-gradient(ellipse at 15% 15%, rgba(124,58,237,0.18)  0%, transparent 55%),
+    radial-gradient(ellipse at 85% 80%, rgba(6,182,212,0.12)   0%, transparent 55%),
+    radial-gradient(ellipse at 50%100%, rgba(236,72,153,0.08)  0%, transparent 50%);
+  --bg-dots:
     radial-gradient(1px 1px at  8% 12%, rgba(255,255,255,0.7), transparent),
     radial-gradient(1px 1px at 22% 45%, rgba(255,255,255,0.5), transparent),
     radial-gradient(1px 1px at 38% 78%, rgba(255,255,255,0.6), transparent),
@@ -31,11 +77,59 @@ body::before {
     radial-gradient(1px 1px at 80%  8%, rgba(255,255,255,0.5), transparent),
     radial-gradient(1px 1px at 92% 35%, rgba(255,255,255,0.6), transparent),
     radial-gradient(1px 1px at 14% 88%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 45% 55%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 73% 92%, rgba(255,255,255,0.5), transparent),
-    radial-gradient(2px 2px at 30% 30%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,0.2), transparent),
-    radial-gradient(2px 2px at 90% 50%, rgba(255,255,255,0.3), transparent);
+    radial-gradient(1px 1px at 73% 92%, rgba(255,255,255,0.5), transparent);
+
+  --card-bg:     rgba(255, 255, 255, 0.04);
+  --card-border: rgba(255, 255, 255, 0.10);
+  --card-shadow: none;
+
+  --input-bg:          rgba(0,0,0,0.30);
+  --input-border:      rgba(255,255,255,0.10);
+  --input-text:        #f1f5f9;
+  --input-placeholder: #475569;
+  --input-focus:       rgba(167,139,250,0.70);
+
+  --char-pending:      #64748b;
+  --char-correct:      #f1f5f9;
+  --char-cursor-color: #facc15;
+
+  --track-bg:     linear-gradient(180deg, #12103a 0%, #0e0c2e 100%);
+  --track-border: rgba(255,255,255,0.08);
+  --track-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
+  --track-line:   rgba(255,255,255,0.12);
+  --track-finish: #1a1a1a;
+
+  --progress-bg:     rgba(0,0,0,0.30);
+  --progress-border: rgba(255,255,255,0.10);
+
+  --scroll-track:       rgba(255,255,255,0.03);
+  --scroll-thumb:       rgba(255,255,255,0.15);
+  --scroll-thumb-hover: rgba(255,255,255,0.25);
+
+  --code-bg:     linear-gradient(135deg, rgba(99,102,241,0.20) 0%, rgba(168,85,247,0.15) 100%);
+  --code-border: rgba(167,139,250,0.40);
+  --code-shadow: 0 0 40px rgba(139,92,246,0.20);
+  --code-text:   #ffffff;
+  --code-label:  #c4b5fd;
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--bg-body);
+  background-image: var(--bg-image);
+  color: var(--char-correct);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: var(--bg-dots);
   pointer-events: none;
   z-index: 0;
 }
@@ -45,38 +139,114 @@ body::before {
   z-index: 1;
 }
 
-/* ── Glass card ─────────────────────────────────────────────────── */
+/* ── Card glass ─────────────────────────────────────────────────── */
 .card-glass {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
   border-radius: 24px;
+  box-shadow: var(--card-shadow);
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
+/* ── Input fields ───────────────────────────────────────────────── */
+.input-themed {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--input-text);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.2s ease;
+}
+.input-themed::placeholder {
+  color: var(--input-placeholder);
+}
+.input-themed:focus {
+  border-color: var(--input-focus);
+  outline: none;
+}
+
+/* ── Room code banner ───────────────────────────────────────────── */
+.room-code-banner {
+  background: var(--code-bg);
+  border-color: var(--code-border);
+  box-shadow: var(--code-shadow);
+}
+.room-code-text  { color: var(--code-text); }
+.room-code-label { color: var(--code-label); }
+
 /* ── Typing display ─────────────────────────────────────────────── */
-.char-pending  { color: #64748b; }
-.char-correct  { color: #f1f5f9; }
-.char-error    { color: #ffffff; background: #ef4444; border-radius: 3px; }
-.char-cursor   {
-  color: #f1f5f9;
-  border-bottom: 3px solid #facc15;
+.char-pending { color: var(--char-pending); }
+.char-correct { color: var(--char-correct); }
+.char-error   { color: #ffffff; background: #ef4444; border-radius: 3px; }
+.char-cursor  {
+  color: var(--char-correct);
+  border-bottom: 3px solid var(--char-cursor-color);
   animation: blink 1s step-end infinite;
 }
 
 @keyframes blink {
-  0%, 100% { border-color: #facc15; }
+  0%, 100% { border-color: var(--char-cursor-color); }
   50%       { border-color: transparent; }
+}
+
+.typing-display {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  transition: background 0.3s ease;
+}
+
+.progress-container {
+  background: var(--progress-bg);
+  border: 1px solid var(--progress-border);
+}
+
+/* ── Rank cards (Results) ───────────────────────────────────────── */
+.rank-card-0 { background: rgba(250,204,21,0.18); border-color: rgba(250,204,21,0.45); }
+.dark .rank-card-0 { background: rgba(250,204,21,0.15); border-color: rgba(250,204,21,0.40); }
+
+.rank-card-1 { background: rgba(148,163,184,0.15); border-color: rgba(148,163,184,0.40); }
+.dark .rank-card-1 { background: rgba(148,163,184,0.12); border-color: rgba(148,163,184,0.30); }
+
+.rank-card-2 { background: rgba(249,115,22,0.15); border-color: rgba(249,115,22,0.40); }
+.dark .rank-card-2 { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.30); }
+
+.rank-card-def { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.08); }
+.dark .rank-card-def { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); }
+
+.rank-name-0 { color: #92400e; }
+.dark .rank-name-0 { color: #fde68a; }
+
+.rank-name-1 { color: #475569; }
+.dark .rank-name-1 { color: #cbd5e1; }
+
+.rank-name-2 { color: #9a3412; }
+.dark .rank-name-2 { color: #fed7aa; }
+
+.rank-name-def { color: #334155; }
+.dark .rank-name-def { color: #e2e8f0; }
+
+/* ── Finished badge (RaceTrack) ─────────────────────────────────── */
+.finished-badge {
+  background: rgba(251,191,36,0.12);
+  color: #d97706;
+  border-color: rgba(217,119,6,0.30);
+}
+.dark .finished-badge {
+  background: rgba(234,179,8,0.20);
+  color: #fde047;
+  border-color: rgba(234,179,8,0.30);
 }
 
 /* ── Race track ─────────────────────────────────────────────────── */
 .track-lane {
   position: relative;
   height: 72px;
-  background: linear-gradient(180deg, #12103a 0%, #0e0c2e 100%);
+  background: var(--track-bg);
   border-radius: 16px;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--track-border);
+  box-shadow: var(--track-shadow);
+  transition: background 0.3s ease;
 }
 
 .track-lane::before {
@@ -88,23 +258,19 @@ body::before {
   height: 2px;
   background: repeating-linear-gradient(
     90deg,
-    rgba(255,255,255,0.12) 0px,
-    rgba(255,255,255,0.12) 16px,
-    transparent 16px,
-    transparent 32px
+    var(--track-line) 0px, var(--track-line) 16px,
+    transparent 16px, transparent 32px
   );
   transform: translateY(-50%);
 }
 
 .track-finish {
   position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  right: 0; top: 0; bottom: 0;
   width: 16px;
   background: repeating-linear-gradient(
     45deg,
-    #1a1a1a 0px, #1a1a1a 6px,
+    var(--track-finish) 0px, var(--track-finish) 6px,
     #ffffff 6px, #ffffff 12px
   );
   opacity: 0.85;
@@ -112,9 +278,7 @@ body::before {
 
 .track-start {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
+  left: 0; top: 0; bottom: 0;
   width: 6px;
   background: linear-gradient(180deg, #4ade80, #22c55e);
   border-radius: 16px 0 0 16px;
@@ -126,7 +290,7 @@ body::before {
   transform: translateY(-50%);
   font-size: 2.3rem;
   transition: left 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6));
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
   z-index: 10;
   user-select: none;
 }
@@ -135,7 +299,7 @@ body::before {
   filter:
     drop-shadow(0 0 10px #fbbf24)
     drop-shadow(0 0 20px #f59e0b)
-    drop-shadow(0 3px 6px rgba(0,0,0,0.6));
+    drop-shadow(0 3px 6px rgba(0,0,0,0.25));
   animation: racerWin 0.5s ease-in-out infinite alternate;
 }
 
@@ -144,7 +308,7 @@ body::before {
   to   { transform: translateY(-45%); }
 }
 
-/* ── Countdown overlay ──────────────────────────────────────────── */
+/* ── Countdown ──────────────────────────────────────────────────── */
 .countdown-number {
   animation: countdownPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -165,6 +329,6 @@ body::before {
 
 /* ── Scrollbar ──────────────────────────────────────────────────── */
 ::-webkit-scrollbar       { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+::-webkit-scrollbar-track { background: var(--scroll-track); }
+::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover); }

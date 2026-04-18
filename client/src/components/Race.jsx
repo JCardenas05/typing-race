@@ -4,18 +4,17 @@ import RaceTrack from './RaceTrack'
 import TypingArea from './TypingArea'
 
 const COUNTDOWN_CONFIG = {
-  3:    { bg: 'rgba(239,68,68,0.85)',    color: '#ffffff', shadow: 'rgba(239,68,68,0.9)',    ring: '#ef4444' },
-  2:    { bg: 'rgba(245,158,11,0.85)',   color: '#ffffff', shadow: 'rgba(245,158,11,0.9)',   ring: '#f59e0b' },
-  1:    { bg: 'rgba(34,197,94,0.85)',    color: '#ffffff', shadow: 'rgba(34,197,94,0.9)',    ring: '#22c55e' },
-  'GO!':{ bg: 'rgba(6,182,212,0.85)',   color: '#ffffff', shadow: 'rgba(6,182,212,0.9)',    ring: '#06b6d4' },
+  3:    { bg: 'rgba(239,68,68,0.88)',  color: '#ffffff', shadow: 'rgba(239,68,68,0.9)',  ring: '#ef4444' },
+  2:    { bg: 'rgba(245,158,11,0.88)', color: '#ffffff', shadow: 'rgba(245,158,11,0.9)', ring: '#f59e0b' },
+  1:    { bg: 'rgba(34,197,94,0.88)',  color: '#ffffff', shadow: 'rgba(34,197,94,0.9)',  ring: '#22c55e' },
+  'GO!':{ bg: 'rgba(6,182,212,0.88)', color: '#ffffff', shadow: 'rgba(6,182,212,0.9)',  ring: '#06b6d4' },
 }
 
 export default function Race({ role, room, roomText, raceStart, onEnd }) {
-  const [countdown, setCountdown] = useState(null)
+  const [countdown, setCountdown]   = useState(null)
   const [raceActive, setRaceActive] = useState(false)
-  const timerRef = useRef(null)
+  const timerRef    = useRef(null)
   const sentProgress = useRef({ progress: -1, wpm: 0 })
-
   const players = room?.players ?? []
 
   useEffect(() => {
@@ -48,15 +47,14 @@ export default function Race({ role, room, roomText, raceStart, onEnd }) {
   return (
     <div className="min-h-screen flex flex-col px-4 py-6 max-w-4xl mx-auto w-full relative">
 
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-fun text-3xl text-white flex items-center gap-2">
+        <h2 className="font-fun text-3xl text-slate-800 dark:text-white flex items-center gap-2">
           🏁 Carrera en curso
         </h2>
         {role === 'teacher' && !isFinished && (
           <button
             onClick={onEnd}
-            className="px-4 py-2 bg-red-600/80 hover:bg-red-500 border border-red-500/40 text-white text-sm font-bold rounded-xl transition-all"
+            className="px-4 py-2 bg-red-500 hover:bg-red-600 dark:bg-red-600/80 dark:hover:bg-red-500 text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-red-200/50 dark:shadow-none"
           >
             Terminar carrera
           </button>
@@ -64,15 +62,14 @@ export default function Race({ role, room, roomText, raceStart, onEnd }) {
         {role === 'student' && (
           <div className={`text-sm font-bold px-4 py-2 rounded-xl border ${
             raceActive
-              ? 'text-emerald-300 bg-emerald-500/15 border-emerald-500/30 animate-pulse'
-              : 'text-slate-400 bg-white/5 border-white/10'
+              ? 'text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-500/15 dark:border-emerald-500/30 animate-pulse'
+              : 'text-slate-500 bg-slate-50 border-slate-200 dark:text-slate-400 dark:bg-white/5 dark:border-white/10'
           }`}>
             {raceActive ? '⌨️ ¡Escribe ya!' : '⏳ Espera...'}
           </div>
         )}
       </div>
 
-      {/* Race track */}
       <div className="card-glass p-5 mb-5">
         <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
           <span>🛣️</span> Pista de carrera
@@ -80,7 +77,6 @@ export default function Race({ role, room, roomText, raceStart, onEnd }) {
         <RaceTrack players={players} />
       </div>
 
-      {/* Typing area */}
       {role === 'student' && (
         <div className="card-glass p-5">
           <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
@@ -93,33 +89,25 @@ export default function Race({ role, room, roomText, raceStart, onEnd }) {
             disabled={!raceActive || isFinished}
           />
           {!raceActive && !isFinished && (
-            <p className="text-center text-slate-500 text-sm mt-3 animate-pulse">
-              ¡Prepárate para escribir!
-            </p>
+            <p className="text-center text-slate-400 text-sm mt-3 animate-pulse">¡Prepárate para escribir!</p>
           )}
         </div>
       )}
 
       {role === 'teacher' && (
-        <div className="card-glass p-4 text-center text-slate-400 text-sm">
+        <div className="card-glass p-4 text-center text-slate-500 dark:text-slate-400 text-sm">
           👀 Estás viendo la carrera como espectador · {players.length} participantes
         </div>
       )}
 
-      {/* Countdown overlay */}
       {countdown !== null && (
         <div
           className="fixed inset-0 flex items-center justify-center z-50"
           style={{ background: cfg.bg, backdropFilter: 'blur(4px)' }}
         >
-          {/* Pulsing ring */}
           <div
-            className="absolute rounded-full animate-ping opacity-30"
-            style={{
-              width: '300px',
-              height: '300px',
-              border: `4px solid ${cfg.ring}`,
-            }}
+            className="absolute rounded-full animate-ping opacity-40"
+            style={{ width: '300px', height: '300px', border: `4px solid ${cfg.ring}` }}
           />
           <div
             key={countdown}

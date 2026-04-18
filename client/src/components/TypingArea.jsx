@@ -45,9 +45,9 @@ export default function TypingArea({ text, onProgress, startTime, disabled }) {
 
   return (
     <div className="relative">
-      {/* Styled text display */}
+      {/* Text display */}
       <div
-        className="font-mono text-lg leading-8 bg-black/30 rounded-2xl p-5 border border-white/10 cursor-text select-none mb-4"
+        className="typing-display font-mono text-lg leading-8 rounded-2xl p-5 cursor-text select-none mb-4"
         style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal' }}
         onClick={() => textareaRef.current?.focus()}
       >
@@ -69,30 +69,28 @@ export default function TypingArea({ text, onProgress, startTime, disabled }) {
       </div>
 
       {/* Progress bar */}
-      <div className="mb-4 h-3 bg-black/30 rounded-full overflow-hidden border border-white/10">
+      <div className="progress-container mb-4 h-3 rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-300"
           style={{
-            width: `${progressPct}%`,
+            width:     `${progressPct}%`,
             background: 'linear-gradient(90deg, #7c3aed, #06b6d4)',
-            boxShadow: progressPct > 0 ? '0 0 10px rgba(6,182,212,0.5)' : 'none',
+            boxShadow:  progressPct > 0 ? '0 0 8px rgba(124,58,237,0.4)' : 'none',
           }}
         />
       </div>
 
-      {/* Stats bar */}
+      {/* Stats */}
       <div className="flex gap-6 text-sm font-mono px-1">
         <span className="flex items-center gap-2">
-          <span className="text-slate-500">Progreso</span>
-          <span className="text-cyan-400 font-black text-base">{progressPct}%</span>
+          <span className="text-slate-400">Progreso</span>
+          <span className="text-violet-600 dark:text-cyan-400 font-black text-base">{progressPct}%</span>
         </span>
         <span className="flex items-center gap-2">
-          <span className="text-slate-500">Velocidad</span>
-          <span className="text-emerald-400 font-black text-base">{wpm} PPM</span>
+          <span className="text-slate-400">Velocidad</span>
+          <span className="text-emerald-600 dark:text-emerald-400 font-black text-base">{wpm} PPM</span>
         </span>
-        <span className="text-slate-600 ml-auto">
-          {correct}/{text.length}
-        </span>
+        <span className="text-slate-400 ml-auto">{correct}/{text.length}</span>
       </div>
 
       {/* Hidden textarea */}
@@ -104,10 +102,7 @@ export default function TypingArea({ text, onProgress, startTime, disabled }) {
         aria-label="Área de escritura"
         className="absolute opacity-0 top-0 left-0 w-full h-full cursor-default resize-none"
         style={{ caretColor: 'transparent' }}
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        spellCheck={false}
+        autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
       />
     </div>
   )

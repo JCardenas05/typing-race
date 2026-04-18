@@ -7,22 +7,36 @@ import Lobby from './components/Lobby'
 import Race from './components/Race'
 import Results from './components/Results'
 
-/*
-  view states:
-    'home' → 'create-room' → 'lobby-teacher' → 'race-teacher' → 'results'
-    'home' → 'join-room'   → 'lobby-student' → 'race-student' → 'results'
-*/
-
 export default function App() {
-  const [view, setView]         = useState('home')
-  const [role, setRole]         = useState(null)    // 'teacher' | 'student'
-  const [roomCode, setRoomCode] = useState(null)
-  const [roomText, setRoomText] = useState('')
-  const [room, setRoom]         = useState(null)    // latest room-update payload
-  const [raceStart, setRaceStart] = useState(null)  // timestamp
-  const [results, setResults]   = useState(null)
-  const [error, setError]       = useState(null)
+  const [view, setView]           = useState('home')
+  const [role, setRole]           = useState(null)
+  const [roomCode, setRoomCode]   = useState(null)
+  const [roomText, setRoomText]   = useState('')
+  const [room, setRoom]           = useState(null)
+  const [raceStart, setRaceStart] = useState(null)
+  const [results, setResults]     = useState(null)
+  const [error, setError]         = useState(null)
 
+  // ── Theme ────────────────────────────────────────────────────────
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem('theme') ?? 'light'
+  )
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (theme === 'dark') {
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+    }
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
+  function toggleTheme() {
+    setTheme(t => t === 'dark' ? 'light' : 'dark')
+  }
+
+  // ── Socket events ────────────────────────────────────────────────
   useEffect(() => {
     socket.on('room-update', (data) => setRoom(data))
 
@@ -73,13 +87,8 @@ export default function App() {
     setView('lobby-student')
   }
 
-  function handleStartRace() {
-    socket.emit('start-race')
-  }
-
-  function handleEndRace() {
-    socket.emit('end-race')
-  }
+  function handleStartRace()  { socket.emit('start-race') }
+  function handleEndRace()    { socket.emit('end-race') }
 
   function handlePlayAgain() {
     if (role === 'teacher') {
@@ -93,62 +102,55 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen">
+
+      {/* Theme toggle */}
+      <button
+        onClick={toggleTheme}
+        title={theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
+        className="fixed top-4 right-4 z-50 w-11 h-11 rounded-full flex items-center justify-center text-xl transition-all hover:scale-110 active:scale-95 shadow-lg border"
+        style={{
+          background: theme === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.85)',
+          borderColor: theme === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(99,102,241,0.20)',
+          backdropFilter: 'blur(8px)',
+        }}
+      >
+        {theme === 'dark' ? '☀️' : '🌙'}
+      </button>
+
+      {/* Error toast */}
       {error && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white px-6 py-3 rounded-xl shadow-xl font-semibold">
-          {error}
-          <button className="ml-4 underline" onClick={() => setError(null)}>Cerrar</button>
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-3 rounded-2xl shadow-xl font-semibold flex items-center gap-3">
+          <span>{error}</span>
+          <button className="underline text-sm opacity-80 hover:opacity-100" onClick={() => setError(null)}>
+            Cerrar
+          </button>
         </div>
       )}
 
       {view === 'home' && (
-        <Home
-          onTeacher={() => setView('create-room')}
-          onStudent={() => setView('join-room')}
-        />
+        <Home onTeacher={() => setView('create-room')} onStudent={() => setView('join-room')} />
       )}
-
       {view === 'create-room' && (
-        <CreateRoom
-          onBack={() => setView('home')}
-          onCreated={handleTeacherCreate}
-        />
+        <CreateRoom onBack={() => setView('home')} onCreated={handleTeacherCreate} />
       )}
-
       {view === 'join-room' && (
-        <JoinRoom
-          onBack={() => setView('home')}
-          onJoined={handleStudentJoin}
-        />
+        <JoinRoom onBack={() => setView('home')} onJoined={handleStudentJoin} />
       )}
-
       {(view === 'lobby-teacher' || view === 'lobby-student') && (
         <Lobby
-          role={role}
-          roomCode={roomCode}
-          roomText={roomText}
-          room={room}
-          onStart={handleStartRace}
-          onBack={resetState}
+          role={role} roomCode={roomCode} roomText={roomText}
+          room={room} onStart={handleStartRace} onBack={resetState}
         />
       )}
-
       {(view === 'race-teacher' || view === 'race-student') && (
         <Race
-          role={role}
-          room={room}
-          roomText={roomText}
-          raceStart={raceStart}
-          onEnd={handleEndRace}
+          role={role} room={room} roomText={roomText}
+          raceStart={raceStart} onEnd={handleEndRace}
         />
       )}
-
       {view === 'results' && (
-        <Results
-          players={results}
-          role={role}
-          onPlayAgain={handlePlayAgain}
-        />
+        <Results players={results} role={role} onPlayAgain={handlePlayAgain} />
       )}
     </div>
   )
