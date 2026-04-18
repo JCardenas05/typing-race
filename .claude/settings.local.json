@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm --prefix server install)",
+      "Bash(npm --prefix client install)",
+      "Bash(npm run *)",
+      "Read(//tmp/**)",
+      "Bash(npm --prefix client run build)",
+      "Bash(kill %1)"
+    ]
+  }
+}
