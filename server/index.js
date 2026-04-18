@@ -1,12 +1,22 @@
 import express from 'express'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import { fileURLToPath } from 'url'
+import path from 'path'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const app = express()
 const httpServer = createServer(app)
 const io = new Server(httpServer, {
   cors: { origin: '*' },
 })
+
+// Serve built React app
+app.use(express.static(path.join(__dirname, '../client/dist')))
+app.get('*', (_req, res) =>
+  res.sendFile(path.join(__dirname, '../client/dist', 'index.html'))
+)
 
 // rooms: Map<code, Room>
 const rooms = new Map()
