@@ -19,7 +19,7 @@ export default function App() {
 
   // ── Theme ────────────────────────────────────────────────────────
   const [theme, setTheme] = useState(
-    () => localStorage.getItem('theme') ?? 'light'
+    () => localStorage.getItem('theme') ?? 'dark'
   )
 
   useEffect(() => {
