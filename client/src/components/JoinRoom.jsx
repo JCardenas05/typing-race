@@ -3,12 +3,12 @@ import socket from '../socket'
 import { CHARACTERS } from '../constants'
 
 export default function JoinRoom({ onBack, onJoined }) {
-  const [step, setStep]             = useState('code')   // 'code' | 'profile'
-  const [code, setCode]             = useState('')
-  const [name, setName]             = useState('')
-  const [character, setCharacter]   = useState(CHARACTERS[0].id)
-  const [loading, setLoading]       = useState(false)
-  const [error, setError]           = useState('')
+  const [step, setStep]           = useState('code')
+  const [code, setCode]           = useState('')
+  const [name, setName]           = useState('')
+  const [character, setCharacter] = useState(CHARACTERS[0].id)
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState('')
 
   function handleCodeSubmit(e) {
     e.preventDefault()
@@ -38,22 +38,29 @@ export default function JoinRoom({ onBack, onJoined }) {
   const selectedChar = CHARACTERS.find(c => c.id === character)
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative">
+      <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full bg-emerald-600/15 blur-3xl pointer-events-none" />
+
+      <div className="w-full max-w-md relative">
         <button
           onClick={step === 'profile' ? () => { setStep('code'); setError('') } : onBack}
-          className="mb-6 text-slate-400 hover:text-white transition-colors flex items-center gap-2 text-sm font-medium"
+          className="mb-5 flex items-center gap-2 text-slate-400 hover:text-white transition-colors font-semibold text-sm group"
         >
-          ← Volver
+          <span className="group-hover:-translate-x-1 transition-transform">←</span> Volver
         </button>
 
-        <div className="bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-700">
+        <div className="card-glass p-8 shadow-2xl">
 
-          {/* STEP 1: Enter code */}
+          {/* STEP 1: código */}
           {step === 'code' && (
             <>
-              <h2 className="text-3xl font-black text-white mb-1">Unirse a Sala</h2>
-              <p className="text-slate-400 mb-6 text-sm">Ingresa el código que te dio tu docente.</p>
+              <div className="flex items-center gap-3 mb-1">
+                <span className="text-4xl">🎟️</span>
+                <h2 className="font-fun text-4xl text-white">Unirse a Sala</h2>
+              </div>
+              <p className="text-slate-400 mb-7 text-sm">
+                Ingresa el código que te dio tu docente.
+              </p>
               <form onSubmit={handleCodeSubmit}>
                 <input
                   value={code}
@@ -61,13 +68,13 @@ export default function JoinRoom({ onBack, onJoined }) {
                   maxLength={5}
                   placeholder="ABCDE"
                   autoFocus
-                  className="w-full bg-slate-900 border border-slate-600 focus:border-emerald-500 outline-none rounded-xl p-4 text-white placeholder-slate-500 font-mono text-3xl text-center tracking-[0.4em] uppercase transition-colors"
+                  className="w-full bg-black/30 border-2 border-white/10 focus:border-emerald-400/70 focus:shadow-glow-green outline-none rounded-2xl p-4 text-white placeholder-slate-600 font-mono text-4xl text-center tracking-[0.5em] uppercase transition-all"
                 />
-                {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
+                {error && <p className="text-red-400 text-sm mt-3 font-semibold">⚠️ {error}</p>}
                 <button
                   type="submit"
                   disabled={code.trim().length < 5}
-                  className="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-colors text-lg"
+                  className="w-full mt-5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:from-slate-700 disabled:to-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-fun text-xl py-4 rounded-2xl transition-all shadow-lg shadow-emerald-900/40 hover:shadow-glow-green hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Continuar →
                 </button>
@@ -75,59 +82,79 @@ export default function JoinRoom({ onBack, onJoined }) {
             </>
           )}
 
-          {/* STEP 2: Pick name + character */}
+          {/* STEP 2: perfil */}
           {step === 'profile' && (
             <>
-              <h2 className="text-3xl font-black text-white mb-1">Tu Perfil</h2>
-              <p className="text-slate-400 mb-6 text-sm">Elige tu nombre y personaje para la carrera.</p>
+              <div className="flex items-center gap-3 mb-1">
+                <span className="text-4xl">🧑‍🚀</span>
+                <h2 className="font-fun text-4xl text-white">Tu Perfil</h2>
+              </div>
+              <p className="text-slate-400 mb-6 text-sm">
+                Elige tu nombre y personaje para la carrera.
+              </p>
 
               <form onSubmit={handleJoin}>
-                <label className="block text-slate-300 text-sm font-semibold mb-1">Tu nombre</label>
+                <label className="block text-slate-300 text-sm font-bold mb-2 uppercase tracking-wider">
+                  Tu nombre
+                </label>
                 <input
                   value={name}
                   onChange={e => setName(e.target.value)}
                   maxLength={20}
                   placeholder="Ej: María, Carlos..."
                   autoFocus
-                  className="w-full bg-slate-900 border border-slate-600 focus:border-emerald-500 outline-none rounded-xl p-3 text-white placeholder-slate-500 font-semibold text-lg transition-colors mb-5"
+                  className="w-full bg-black/30 border-2 border-white/10 focus:border-emerald-400/70 outline-none rounded-2xl p-3 text-white placeholder-slate-600 font-semibold text-lg transition-all mb-6"
                 />
 
-                <label className="block text-slate-300 text-sm font-semibold mb-2">Tu personaje</label>
+                <label className="block text-slate-300 text-sm font-bold mb-3 uppercase tracking-wider">
+                  Tu personaje
+                </label>
                 <div className="grid grid-cols-4 gap-2 mb-5">
                   {CHARACTERS.map(c => (
                     <button
                       key={c.id}
                       type="button"
                       onClick={() => setCharacter(c.id)}
-                      className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all ${
-                        character === c.id
-                          ? 'border-emerald-400 bg-emerald-900/30 scale-105'
-                          : 'border-slate-600 hover:border-slate-400'
-                      }`}
+                      className="flex flex-col items-center gap-1 p-3 rounded-2xl border-2 transition-all duration-200 hover:scale-110"
+                      style={{
+                        borderColor: character === c.id ? c.color : 'rgba(255,255,255,0.1)',
+                        background: character === c.id
+                          ? `${c.color}22`
+                          : 'rgba(0,0,0,0.2)',
+                        boxShadow: character === c.id ? `0 0 16px ${c.color}55` : 'none',
+                        transform: character === c.id ? 'scale(1.08)' : undefined,
+                      }}
                     >
                       <span className="text-3xl">{c.emoji}</span>
-                      <span className="text-xs text-slate-400 leading-tight text-center">{c.label}</span>
+                      <span className="text-[10px] text-slate-400 leading-tight text-center">{c.label}</span>
                     </button>
                   ))}
                 </div>
 
                 {/* Preview */}
-                <div className="flex items-center gap-3 bg-slate-900 rounded-xl p-3 mb-5">
-                  <span className="text-4xl">{selectedChar?.emoji}</span>
+                <div
+                  className="flex items-center gap-4 rounded-2xl p-4 mb-5 border"
+                  style={{
+                    background: `${selectedChar?.color ?? '#7c3aed'}15`,
+                    borderColor: `${selectedChar?.color ?? '#7c3aed'}40`,
+                  }}
+                >
+                  <span className="text-5xl">{selectedChar?.emoji}</span>
                   <div>
-                    <p className="font-bold text-white">{name || '(tu nombre)'}</p>
+                    <p className="font-fun text-xl text-white">{name || '(tu nombre)'}</p>
                     <p className="text-xs text-slate-400">{selectedChar?.label}</p>
                   </div>
+                  <div className="ml-auto text-2xl animate-float-slow">✨</div>
                 </div>
 
-                {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
+                {error && <p className="text-red-400 text-sm mb-4 font-semibold">⚠️ {error}</p>}
 
                 <button
                   type="submit"
                   disabled={loading || !name.trim()}
-                  className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-colors text-lg"
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:from-slate-700 disabled:to-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-fun text-xl py-4 rounded-2xl transition-all shadow-lg shadow-emerald-900/40 hover:shadow-glow-green hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  {loading ? 'Uniéndome...' : '¡Unirme a la carrera! →'}
+                  {loading ? '⏳ Uniéndome...' : '🏁 ¡A la Carrera!'}
                 </button>
               </form>
             </>

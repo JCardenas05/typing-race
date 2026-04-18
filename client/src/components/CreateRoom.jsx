@@ -8,14 +8,17 @@ const SAMPLE_TEXTS = [
   'Los computadores procesan información a gran velocidad y los programadores escriben código para darles instrucciones.',
 ]
 
+const SAMPLE_COLORS = [
+  'from-purple-600 to-indigo-600 shadow-purple-900/40',
+  'from-pink-600 to-rose-600 shadow-pink-900/40',
+  'from-amber-500 to-orange-500 shadow-amber-900/40',
+  'from-cyan-600 to-teal-600 shadow-cyan-900/40',
+]
+
 export default function CreateRoom({ onBack, onCreated }) {
   const [text, setText]       = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
-
-  function useSample(s) {
-    setText(s)
-  }
 
   function handleCreate(e) {
     e.preventDefault()
@@ -38,25 +41,37 @@ export default function CreateRoom({ onBack, onCreated }) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
-      <div className="w-full max-w-2xl">
-        <button onClick={onBack} className="mb-6 text-slate-400 hover:text-white transition-colors flex items-center gap-2 text-sm font-medium">
-          ← Volver
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative">
+      <div className="absolute top-0 left-1/4 w-64 h-64 rounded-full bg-purple-600/15 blur-3xl pointer-events-none" />
+
+      <div className="w-full max-w-2xl relative">
+        <button
+          onClick={onBack}
+          className="mb-5 flex items-center gap-2 text-slate-400 hover:text-white transition-colors font-semibold text-sm group"
+        >
+          <span className="group-hover:-translate-x-1 transition-transform">←</span> Volver
         </button>
 
-        <div className="bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-700">
-          <h2 className="text-3xl font-black text-white mb-1">Crear Sala</h2>
-          <p className="text-slate-400 mb-6 text-sm">Escribe o pega el texto que tus estudiantes deberán mecanografiar.</p>
+        <div className="card-glass p-8 shadow-2xl">
+          <div className="flex items-center gap-3 mb-1">
+            <span className="text-4xl">📝</span>
+            <h2 className="font-fun text-4xl text-white">Crear Sala</h2>
+          </div>
+          <p className="text-slate-400 mb-7 text-sm ml-1">
+            Escribe o pega el texto que tus estudiantes deberán mecanografiar.
+          </p>
 
           {/* Sample texts */}
-          <div className="mb-4">
-            <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-2">Textos de ejemplo</p>
+          <div className="mb-5">
+            <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest mb-3">
+              ⚡ Textos de ejemplo
+            </p>
             <div className="flex flex-wrap gap-2">
               {SAMPLE_TEXTS.map((s, i) => (
                 <button
                   key={i}
-                  onClick={() => useSample(s)}
-                  className="text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1.5 rounded-lg transition-colors"
+                  onClick={() => setText(s)}
+                  className={`text-xs bg-gradient-to-r ${SAMPLE_COLORS[i]} text-white px-4 py-2 rounded-xl shadow-lg font-semibold transition-all hover:scale-105 active:scale-95`}
                 >
                   Ejemplo {i + 1}
                 </button>
@@ -70,14 +85,14 @@ export default function CreateRoom({ onBack, onCreated }) {
               onChange={e => setText(e.target.value)}
               placeholder="Escribe aquí el texto para la carrera..."
               rows={5}
-              className="w-full bg-slate-900 border border-slate-600 focus:border-sky-500 outline-none rounded-xl p-4 text-white placeholder-slate-500 font-mono text-sm resize-none transition-colors"
+              className="w-full bg-black/30 border border-white/10 focus:border-purple-400/70 focus:shadow-glow-purple outline-none rounded-2xl p-4 text-white placeholder-slate-500 font-mono text-sm resize-none transition-all"
             />
-            <div className="flex items-center justify-between mt-1 mb-4">
+            <div className="flex items-center justify-between mt-2 mb-5">
               {error
-                ? <p className="text-red-400 text-sm">{error}</p>
+                ? <p className="text-red-400 text-sm font-semibold">⚠️ {error}</p>
                 : <span />
               }
-              <span className={`text-xs ${text.length > 500 ? 'text-red-400' : 'text-slate-500'}`}>
+              <span className={`text-xs font-mono ${text.length > 500 ? 'text-red-400' : 'text-slate-500'}`}>
                 {text.length} / 500
               </span>
             </div>
@@ -85,9 +100,9 @@ export default function CreateRoom({ onBack, onCreated }) {
             <button
               type="submit"
               disabled={loading || text.trim().length < 10}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-colors text-lg"
+              className="w-full relative overflow-hidden bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-slate-700 disabled:to-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-fun text-xl py-4 rounded-2xl transition-all shadow-lg shadow-purple-900/40 hover:shadow-glow-purple hover:scale-[1.02] active:scale-[0.98]"
             >
-              {loading ? 'Creando sala...' : 'Crear Sala →'}
+              {loading ? '⏳ Creando sala...' : '🚀 Crear Sala'}
             </button>
           </form>
         </div>
