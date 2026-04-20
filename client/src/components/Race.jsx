@@ -70,15 +70,8 @@ export default function Race({ role, room, roomText, raceStart, onEnd }) {
         )}
       </div>
 
-      <div className="card-glass p-5 mb-5">
-        <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
-          <span>🛣️</span> Pista de carrera
-        </h3>
-        <RaceTrack players={players} />
-      </div>
-
       {role === 'student' && (
-        <div className="card-glass p-5">
+        <div className="card-glass p-5 mb-5">
           <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
             <span>⌨️</span> Escribe el texto
           </h3>
@@ -95,10 +88,17 @@ export default function Race({ role, room, roomText, raceStart, onEnd }) {
       )}
 
       {role === 'teacher' && (
-        <div className="card-glass p-4 text-center text-slate-500 dark:text-slate-400 text-sm">
+        <div className="card-glass p-4 mb-5 text-center text-slate-500 dark:text-slate-400 text-sm">
           👀 Estás viendo la carrera como espectador · {players.length} participantes
         </div>
       )}
+
+      <div className="card-glass p-5">
+        <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+          <span>🛣️</span> Pista de carrera
+        </h3>
+        <RaceTrack players={players} />
+      </div>
 
       {countdown !== null && (
         <div

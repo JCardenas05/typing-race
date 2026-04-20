@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
 export default function TypingArea({ text, onProgress, startTime, disabled }) {
-  const [typed, setTyped]  = useState('')
-  const textareaRef        = useRef(null)
-  const progressSentAt     = useRef(0)
-  const lastReported       = useRef({ progress: -1, wpm: 0 })
+  const [typed, setTyped]        = useState('')
+  const [capsLock, setCapsLock]  = useState(false)
+  const [shake, setShake]        = useState(false)
+  const textareaRef              = useRef(null)
+  const progressSentAt           = useRef(0)
+  const lastReported             = useRef({ progress: -1, wpm: 0 })
+  const composingRef             = useRef(false)
 
   useEffect(() => {
     if (!disabled) textareaRef.current?.focus()
@@ -22,10 +25,24 @@ export default function TypingArea({ text, onProgress, startTime, disabled }) {
     return { progress, wpm, correct }
   }, [text, startTime])
 
+  function handleKeyDown(e) {
+    if (e.getModifierState) setCapsLock(e.getModifierState('CapsLock'))
+  }
+
+  function triggerShake() {
+    setShake(false)
+    requestAnimationFrame(() => setShake(true))
+    setTimeout(() => setShake(false), 400)
+  }
+
   function handleChange(e) {
     if (disabled) return
     const value = e.target.value
     if (value.length > text.length) return
+    if (!composingRef.current && value.length > typed.length && value[value.length - 1] !== text[value.length - 1]) {
+      triggerShake()
+      return
+    }
     setTyped(value)
 
     const now = Date.now()
@@ -47,7 +64,7 @@ export default function TypingArea({ text, onProgress, startTime, disabled }) {
     <div className="relative">
       {/* Text display */}
       <div
-        className="typing-display font-mono text-lg leading-8 rounded-2xl p-5 cursor-text select-none mb-4"
+        className={`typing-display font-mono text-lg leading-8 rounded-2xl p-5 cursor-text select-none mb-4 transition-all${shake ? ' typing-display-shake' : ''}`}
         style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal' }}
         onClick={() => textareaRef.current?.focus()}
       >
@@ -80,6 +97,13 @@ export default function TypingArea({ text, onProgress, startTime, disabled }) {
         />
       </div>
 
+      {/* Caps Lock warning */}
+      {capsLock && (
+        <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-xl bg-amber-50 border border-amber-300 dark:bg-amber-500/10 dark:border-amber-500/40 text-amber-700 dark:text-amber-400 text-sm font-semibold">
+          <span>⚠️</span> Bloq Mayús activado — puede causar errores al escribir
+        </div>
+      )}
+
       {/* Stats */}
       <div className="flex gap-6 text-sm font-mono px-1">
         <span className="flex items-center gap-2">
@@ -98,6 +122,9 @@ export default function TypingArea({ text, onProgress, startTime, disabled }) {
         ref={textareaRef}
         value={typed}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        onCompositionStart={() => { composingRef.current = true }}
+        onCompositionEnd={() => { composingRef.current = false }}
         disabled={disabled}
         aria-label="Área de escritura"
         className="absolute opacity-0 top-0 left-0 w-full h-full cursor-default resize-none"
