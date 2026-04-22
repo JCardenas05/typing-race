@@ -105,7 +105,7 @@ export default function Results({ players, role, onPlayAgain }) {
         </div>
 
         <div className="flex gap-4">
-          {role === 'teacher' ? (
+          {role === 'host' ? (
             <button
               onClick={onPlayAgain}
               className="flex-1 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-fun text-2xl rounded-2xl transition-all shadow-lg shadow-violet-200/50 dark:shadow-violet-900/40 hover:shadow-glow-purple hover:scale-[1.02] active:scale-[0.98]"

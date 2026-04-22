@@ -52,7 +52,7 @@ export default function CreateRoom({ onBack, onCreated }) {
             <h2 className="font-fun text-4xl text-slate-800 dark:text-white">Crear Sala</h2>
           </div>
           <p className="text-slate-500 dark:text-slate-400 mb-7 text-sm ml-1">
-            Escribe o pega el texto que tus estudiantes deberán mecanografiar.
+            Escribe o pega el texto que los guests deberán mecanografiar.
           </p>
 
           <div className="mb-5">

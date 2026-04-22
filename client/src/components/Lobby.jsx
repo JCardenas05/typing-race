@@ -21,23 +21,31 @@ export default function Lobby({ role, roomCode, roomText, room, onStart, onBack 
             {roomCode}
           </p>
           <p className="room-code-label text-sm mt-3 opacity-80">
-            Comparte este código con tus estudiantes
+            Comparte este código con los guests
           </p>
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer pointer-events-none" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-          {/* Text preview */}
-          <div className="card-glass p-6">
-            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
-              <span>📄</span> Texto de la carrera
-            </h3>
-            <p className="text-slate-700 dark:text-slate-200 font-mono text-sm leading-relaxed line-clamp-6">
-              {roomText}
-            </p>
-            <p className="text-slate-400 text-xs mt-3">{roomText.length} caracteres</p>
-          </div>
+          {/* Text preview — only visible to teacher */}
+          {role === 'host' ? (
+            <div className="card-glass p-6">
+              <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
+                <span>📄</span> Texto de la carrera
+              </h3>
+              <p className="text-slate-700 dark:text-slate-200 font-mono text-sm leading-relaxed line-clamp-6">
+                {roomText}
+              </p>
+              <p className="text-slate-400 text-xs mt-3">{roomText.length} caracteres</p>
+            </div>
+          ) : (
+            <div className="card-glass p-6 flex flex-col items-center justify-center text-center">
+              <div className="text-5xl mb-3">🔒</div>
+              <p className="text-slate-500 dark:text-slate-400 font-semibold">Texto oculto</p>
+              <p className="text-slate-400 text-xs mt-1">Se revelará cuando empiece la carrera</p>
+            </div>
+          )}
 
           {/* Players list */}
           <div className="card-glass p-6">
@@ -47,7 +55,7 @@ export default function Lobby({ role, roomCode, roomText, room, onStart, onBack 
             {players.length === 0 ? (
               <div className="text-center py-6">
                 <div className="text-5xl mb-3 animate-bounce">⏳</div>
-                <p className="text-slate-400 text-sm">Esperando estudiantes...</p>
+                <p className="text-slate-400 text-sm">Esperando guests...</p>
               </div>
             ) : (
               <div className="flex flex-col gap-2 max-h-48 overflow-y-auto">
@@ -85,7 +93,7 @@ export default function Lobby({ role, roomCode, roomText, room, onStart, onBack 
             Salir
           </button>
 
-          {role === 'teacher' && (
+          {role === 'host' && (
             <button
               onClick={onStart}
               disabled={!canStart}
@@ -104,9 +112,9 @@ export default function Lobby({ role, roomCode, roomText, room, onStart, onBack 
             </button>
           )}
 
-          {role === 'student' && (
+          {role === 'guest' && (
             <div className="flex-1 py-4 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-400 font-bold text-xl text-center">
-              ⏳ Esperando que el docente inicie...
+              ⏳ Esperando que el host inicie...
             </div>
           )}
         </div>

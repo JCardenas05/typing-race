@@ -42,7 +42,7 @@ export default function App() {
 
     socket.on('race-countdown', ({ startTime }) => {
       setRaceStart(startTime)
-      setView(role === 'teacher' ? 'race-teacher' : 'race-student')
+      setView(role === 'host' ? 'race-host' : 'race-guest')
     })
 
     socket.on('race-finished', ({ players }) => {
@@ -73,29 +73,29 @@ export default function App() {
     setResults(null)
   }
 
-  function handleTeacherCreate({ text, code }) {
-    setRole('teacher')
+  function handleHostCreate({ text, code }) {
+    setRole('host')
     setRoomCode(code)
     setRoomText(text)
-    setView('lobby-teacher')
+    setView('lobby-host')
   }
 
-  function handleStudentJoin({ text, code }) {
-    setRole('student')
+  function handleGuestJoin({ text, code }) {
+    setRole('guest')
     setRoomCode(code)
     setRoomText(text)
-    setView('lobby-student')
+    setView('lobby-guest')
   }
 
   function handleStartRace()  { socket.emit('start-race') }
   function handleEndRace()    { socket.emit('end-race') }
 
   function handlePlayAgain() {
-    if (role === 'teacher') {
+    if (role === 'host') {
       socket.emit('reset-room')
       setResults(null)
       setRaceStart(null)
-      setView('lobby-teacher')
+      setView('lobby-host')
     } else {
       resetState()
     }
@@ -129,21 +129,21 @@ export default function App() {
       )}
 
       {view === 'home' && (
-        <Home onTeacher={() => setView('create-room')} onStudent={() => setView('join-room')} />
+        <Home onHost={() => setView('create-room')} onGuest={() => setView('join-room')} />
       )}
       {view === 'create-room' && (
-        <CreateRoom onBack={() => setView('home')} onCreated={handleTeacherCreate} />
+        <CreateRoom onBack={() => setView('home')} onCreated={handleHostCreate} />
       )}
       {view === 'join-room' && (
-        <JoinRoom onBack={() => setView('home')} onJoined={handleStudentJoin} />
+        <JoinRoom onBack={() => setView('home')} onJoined={handleGuestJoin} />
       )}
-      {(view === 'lobby-teacher' || view === 'lobby-student') && (
+      {(view === 'lobby-host' || view === 'lobby-guest') && (
         <Lobby
           role={role} roomCode={roomCode} roomText={roomText}
           room={room} onStart={handleStartRace} onBack={resetState}
         />
       )}
-      {(view === 'race-teacher' || view === 'race-student') && (
+      {(view === 'race-host' || view === 'race-guest') && (
         <Race
           role={role} room={room} roomText={roomText}
           raceStart={raceStart} onEnd={handleEndRace}

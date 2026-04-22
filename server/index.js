@@ -41,7 +41,7 @@ function serializeRoom(room) {
 
 io.on('connection', (socket) => {
   let roomCode = null
-  let role = null // 'teacher' | 'student'
+  let role = null // 'host' | 'guest'
 
   // ── Teacher: create room ──────────────────────────────────────────────────
   socket.on('create-room', ({ text }, cb) => {
@@ -50,13 +50,13 @@ io.on('connection', (socket) => {
       code,
       text: text.trim(),
       state: 'waiting', // 'waiting' | 'countdown' | 'racing' | 'finished'
-      teacher: socket.id,
+      host: socket.id,
       players: new Map(),
       startTime: null,
       countdownTimer: null,
     })
     roomCode = code
-    role = 'teacher'
+    role = 'host'
     socket.join(code)
     cb({ ok: true, code })
   })
@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
     })
 
     roomCode = upper
-    role = 'student'
+    role = 'guest'
     socket.join(upper)
 
     io.to(upper).emit('room-update', serializeRoom(room))
@@ -90,12 +90,12 @@ io.on('connection', (socket) => {
   socket.on('start-race', () => {
     if (!roomCode) return
     const room = rooms.get(roomCode)
-    if (!room || room.teacher !== socket.id || room.state !== 'waiting') return
+    if (!room || room.host !== socket.id || room.state !== 'waiting') return
     if (room.players.size === 0) return
 
     room.state = 'countdown'
-    // startTime is 3 seconds from now
-    room.startTime = Date.now() + 3000
+    // startTime is 5 seconds from now — gives all clients time to mount before the 3-2-1 overlay
+    room.startTime = Date.now() + 5000
     io.to(roomCode).emit('race-countdown', { startTime: room.startTime })
     io.to(roomCode).emit('room-update', serializeRoom(room))
 
@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
     room.countdownTimer = setTimeout(() => {
       room.state = 'racing'
       io.to(roomCode).emit('room-update', serializeRoom(room))
-    }, 3100)
+    }, 5100)
   })
 
   // ── Student: typing progress update ──────────────────────────────────────
@@ -138,7 +138,7 @@ io.on('connection', (socket) => {
   socket.on('end-race', () => {
     if (!roomCode) return
     const room = rooms.get(roomCode)
-    if (!room || room.teacher !== socket.id) return
+    if (!room || room.host !== socket.id) return
     room.state = 'finished'
     io.to(roomCode).emit('race-finished', { players: [...room.players.values()] })
     io.to(roomCode).emit('room-update', serializeRoom(room))
@@ -148,7 +148,7 @@ io.on('connection', (socket) => {
   socket.on('reset-room', () => {
     if (!roomCode) return
     const room = rooms.get(roomCode)
-    if (!room || room.teacher !== socket.id) return
+    if (!room || room.host !== socket.id) return
 
     if (room.countdownTimer) clearTimeout(room.countdownTimer)
     room.state = 'waiting'
@@ -168,9 +168,9 @@ io.on('connection', (socket) => {
     const room = rooms.get(roomCode)
     if (!room) return
 
-    if (role === 'teacher') {
+    if (role === 'host') {
       if (room.countdownTimer) clearTimeout(room.countdownTimer)
-      io.to(roomCode).emit('room-closed', { message: 'El docente abandonó la sala.' })
+      io.to(roomCode).emit('room-closed', { message: 'El host abandonó la sala.' })
       rooms.delete(roomCode)
     } else {
       room.players.delete(socket.id)

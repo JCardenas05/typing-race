@@ -51,7 +51,7 @@ export default function Race({ role, room, roomText, raceStart, onEnd }) {
         <h2 className="font-fun text-3xl text-slate-800 dark:text-white flex items-center gap-2">
           🏁 Carrera en curso
         </h2>
-        {role === 'teacher' && !isFinished && (
+        {role === 'host' && !isFinished && (
           <button
             onClick={onEnd}
             className="px-4 py-2 bg-red-500 hover:bg-red-600 dark:bg-red-600/80 dark:hover:bg-red-500 text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-red-200/50 dark:shadow-none"
@@ -59,7 +59,7 @@ export default function Race({ role, room, roomText, raceStart, onEnd }) {
             Terminar carrera
           </button>
         )}
-        {role === 'student' && (
+        {role === 'guest' && (
           <div className={`text-sm font-bold px-4 py-2 rounded-xl border ${
             raceActive
               ? 'text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-500/15 dark:border-emerald-500/30 animate-pulse'
@@ -70,7 +70,7 @@ export default function Race({ role, room, roomText, raceStart, onEnd }) {
         )}
       </div>
 
-      {role === 'student' && (
+      {role === 'guest' && (
         <div className="card-glass p-5 mb-5">
           <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
             <span>⌨️</span> Escribe el texto
@@ -87,7 +87,7 @@ export default function Race({ role, room, roomText, raceStart, onEnd }) {
         </div>
       )}
 
-      {role === 'teacher' && (
+      {role === 'host' && (
         <div className="card-glass p-4 mb-5 text-center text-slate-500 dark:text-slate-400 text-sm">
           👀 Estás viendo la carrera como espectador · {players.length} participantes
         </div>
@@ -103,23 +103,36 @@ export default function Race({ role, room, roomText, raceStart, onEnd }) {
       {countdown !== null && (
         <div
           className="fixed inset-0 flex items-center justify-center z-50"
-          style={{ background: cfg.bg, backdropFilter: 'blur(4px)' }}
+          style={{
+            background: cfg.bg ?? 'rgba(15,23,42,0.92)',
+            backdropFilter: 'blur(4px)',
+          }}
         >
-          <div
-            className="absolute rounded-full animate-ping opacity-40"
-            style={{ width: '300px', height: '300px', border: `4px solid ${cfg.ring}` }}
-          />
-          <div
-            key={countdown}
-            className="countdown-number font-fun leading-none select-none"
-            style={{
-              fontSize: 'clamp(8rem, 20vw, 14rem)',
-              color: cfg.color,
-              textShadow: `0 0 60px ${cfg.shadow}, 0 0 120px ${cfg.shadow}`,
-            }}
-          >
-            {countdown}
-          </div>
+          {(countdown === 'GO!' || (typeof countdown === 'number' && countdown <= 3)) ? (
+            <>
+              <div
+                className="absolute rounded-full animate-ping opacity-40"
+                style={{ width: '300px', height: '300px', border: `4px solid ${cfg.ring}` }}
+              />
+              <div
+                key={countdown}
+                className="countdown-number font-fun leading-none select-none"
+                style={{
+                  fontSize: 'clamp(8rem, 20vw, 14rem)',
+                  color: cfg.color,
+                  textShadow: `0 0 60px ${cfg.shadow}, 0 0 120px ${cfg.shadow}`,
+                }}
+              >
+                {countdown}
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center gap-4">
+              <div className="text-6xl animate-bounce">🏁</div>
+              <p className="font-fun text-white text-3xl">¡Prepárate!</p>
+              <p className="text-white/60 text-lg">La carrera está por comenzar…</p>
+            </div>
+          )}
         </div>
       )}
     </div>

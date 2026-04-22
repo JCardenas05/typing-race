@@ -12,7 +12,7 @@ export default function JoinRoom({ onBack, onJoined }) {
 
   function handleCodeSubmit(e) {
     e.preventDefault()
-    if (code.trim().length < 5) { setError('Ingresa el código de 5 letras que te dio el docente.'); return }
+    if (code.trim().length < 5) { setError('Ingresa el código de 5 letras que te dio el host.'); return }
     setError('')
     setStep('profile')
   }
@@ -52,7 +52,7 @@ export default function JoinRoom({ onBack, onJoined }) {
                 <h2 className="font-fun text-4xl text-slate-800 dark:text-white">Unirse a Sala</h2>
               </div>
               <p className="text-slate-500 dark:text-slate-400 mb-7 text-sm">
-                Ingresa el código que te dio tu docente.
+                Ingresa el código que te dio el host.
               </p>
               <form onSubmit={handleCodeSubmit}>
                 <input
